@@ -16,6 +16,23 @@ Install FastMCP: `python3 -m pip install fastmcp`
 If import fails in GDB, ensure `fastmcp` is installed to the same Python environment GDB uses.
 
 ## Quick Start
+
+### Option 1: Docker (Recommended)
+1) Build the Docker image
+```bash
+docker build -t gdb-mcp .
+```
+
+2) Run the container
+```bash
+docker run -it --rm -p 3333:3333 gdb-mcp
+```
+
+The MCP server will automatically start on port 3333 when GDB launches.
+
+3) Connect an MCP client to the server at `http://localhost:3333`
+
+### Option 2: Local Installation
 1) Start GDB with the MCP extension loaded
 - `gdb -q -ex 'source ./gdb-mcp'`
 - Alternatively, load from within gdb `source ./gdb-mcp`
