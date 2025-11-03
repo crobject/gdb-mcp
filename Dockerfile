@@ -8,7 +8,14 @@ RUN apt-get update && \
     python3-pip \
     curl \
     wget \
+    file \
+    locales \
     && rm -rf /var/lib/apt/lists/*
+
+# GEB UTF-8
+
+RUN locale-gen en_US.UTF-8
+ENV LC_CTYPE=C.UTF-8
 
 # Install fastmcp library
 RUN pip3 install 'fastmcp>=2.0'
@@ -19,7 +26,6 @@ WORKDIR /workspace
 # Copy the gdb-mcp script
 COPY gdb-mcp /usr/local/share/gdb-mcp
 
-RUN curl -qsL 'https://install.pwndbg.re' | sh -s -- -t pwndbg-gdb
 
 # Create .gdbinit that sources the MCP server and starts it
 RUN echo 'source /usr/local/share/gdb-mcp' > /root/.gdbinit && \
@@ -27,6 +33,8 @@ RUN echo 'source /usr/local/share/gdb-mcp' > /root/.gdbinit && \
     echo 'import gdb' >> /root/.gdbinit && \
     echo 'gdb.execute("mcp-server 0.0.0.0 3333")' >> /root/.gdbinit && \
     echo 'end' >> /root/.gdbinit
+
+RUN bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
 
 # Expose the MCP server port
 EXPOSE 3333
